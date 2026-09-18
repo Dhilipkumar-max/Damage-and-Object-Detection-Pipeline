@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Detection {
+  id           String   @id @default(cuid())
+  imageName    String
+  imageData    String   // base64 encoded image (compressed)
+  objectsCount Int      @default(0)
+  damagesCount Int      @default(0)
+  severity     String   @default("none") // none | low | medium | high | critical
+  processingMs Int      @default(0)
+  detections   String   // JSON string of detection array
+  createdAt    DateTime @default(now())
+}
